@@ -1,0 +1,244 @@
+version: '3'
+services:
+  dig-client:
+    container_name: dig-client
+    build:
+      context: ./Docker_build/dig_client
+      dockerfile: Dockerfile
+    tty: true
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.3
+  cachesesrve:
+    container_name: cacheserve
+    build:
+      context: ./Docker_build/cacheserve_build
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro 
+    tmpfs:
+      - /run
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.10
+  bind-cache:
+    container_name: bind-cache
+    build:
+      context: ./Docker_build/bind_build_rocky9
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./bind_config/cache/config/named.conf.rocky9:/etc/named.conf:rw
+      - ./bind_config/cache/records/named.ca.rocky9:/var/named/named.ca:rw 
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.11
+  unbound:
+    container_name: unbound
+    build:
+      context: ./Docker_build/unbound_build
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./unbound_config/:/opt/unbound/etc/unbound
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.15
+  bind-root:
+    container_name: bind-root
+    image: ubuntu/bind9:latest
+    volumes:
+      - ./bind_config/root/config/named.conf:/etc/bind/named.conf:rw
+      - ./bind_config/root/records/:/var/lib/bind:rw 
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.30
+  bind-com01:
+    container_name: bind-com01
+    image: ubuntu/bind9:latest
+    volumes:
+      - ./bind_config/com/config/named.conf:/etc/bind/named.conf:rw
+      - ./bind_config/com/records/:/var/lib/bind:rw 
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.40
+  bind-com02:
+    container_name: bind-com02
+    image: ubuntu/bind9:latest
+    volumes:
+      - ./bind_config/com/config/named.conf:/etc/bind/named.conf:rw
+      - ./bind_config/com/records/:/var/lib/bind:rw 
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.41
+  bind-example01:
+    container_name: bind-example01
+    image: ubuntu/bind9:latest
+    volumes:
+      - ./bind_config/example.com/config/named.conf:/etc/bind/named.conf:rw
+      - ./bind_config/example.com/records/:/var/lib/bind:rw 
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.50
+  bind-example02:
+    container_name: bind-example02
+    image: ubuntu/bind9:latest
+    volumes:
+      - ./bind_config/example.com/config/named.conf:/etc/bind/named.conf:rw
+      - ./bind_config/example.com/records/:/var/lib/bind:rw 
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.51
+  scapy01:
+    container_name: scapy01
+    command: [ "python3", "scapy_return_delegation.py"]
+    build:
+      context: ./Docker_build/scapy_build
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./scapy_scripts/:/root/scapy_scripts:rw
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.60
+  scapy02:
+    container_name: scapy02
+    command: [ "python3", "scapy_return_delegation.py"]
+    build:
+      context: ./Docker_build/scapy_build
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./scapy_scripts/:/root/scapy_scripts:rw
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.61
+  scapy01-sub:
+    container_name: scapy01-sub
+    command: [ "python3", "scapy_return_answer.py"]
+    build:
+      context: ./Docker_build/scapy_build
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./scapy_scripts/:/root/scapy_scripts:rw
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.62
+  scapy02-sub:
+    container_name: scapy02-sub
+    command: [ "python3", "scapy_return_answer.py"]
+    build:
+      context: ./Docker_build/scapy_build
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./scapy_scripts/:/root/scapy_scripts:rw
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.63
+  scapy01-loop:
+    container_name: scapy01-loop
+    command: [ "python3", "scapy_large_delegation.py"]
+    build:
+      context: ./Docker_build/scapy_build
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./scapy_scripts/:/root/scapy_scripts:rw
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.64
+  scapy02-loop:
+    container_name: scapy02-loop
+    command: [ "python3", "scapy_large_delegation.py"]
+    build:
+      context: ./Docker_build/scapy_build
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./scapy_scripts/:/root/scapy_scripts:rw
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.65
+  scapy03-loop:
+    container_name: scapy03-loop
+    command: [ "python3", "scapy_large_delegation.py"]
+    build:
+      context: ./Docker_build/scapy_build
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./scapy_scripts/:/root/scapy_scripts:rw
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.66
+  scapy04-loop:
+    container_name: scapy04-loop
+    command: [ "python3", "scapy_large_delegation.py"]
+    build:
+      context: ./Docker_build/scapy_build
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./scapy_scripts/:/root/scapy_scripts:rw
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.67
+  scapy05-loop:
+    container_name: scapy05-loop
+    command: [ "python3", "scapy_large_delegation.py"]
+    build:
+      context: ./Docker_build/scapy_build
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./scapy_scripts/:/root/scapy_scripts:rw
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.68
+  scapy06-loop:
+    container_name: scapy06-loop
+    command: [ "python3", "scapy_large_delegation.py"]
+    build:
+      context: ./Docker_build/scapy_build
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./scapy_scripts/:/root/scapy_scripts:rw
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.69
+  scapy07-loop:
+    container_name: scapy07-loop
+    command: [ "python3", "scapy_large_delegation.py"]
+    build:
+      context: ./Docker_build/scapy_build
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./scapy_scripts/:/root/scapy_scripts:rw
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.70
+  scapy08-loop:
+    container_name: scapy08-loop
+    command: [ "python3", "scapy_large_delegation.py"]
+    build:
+      context: ./Docker_build/scapy_build
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./scapy_scripts/:/root/scapy_scripts:rw
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.71
+
+networks:
+  cacheserve_test:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.20.0.0/24"

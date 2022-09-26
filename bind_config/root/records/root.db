@@ -1,0 +1,37 @@
+$ORIGIN .
+$TTL 3600
+. IN SOA x.root-servers.net. hostmaster.root-servers.net. (
+2010062304
+1h
+15m
+30d
+1h )
+  IN NS x.root-servers.net.
+
+x.root-servers.net. IN A 172.20.0.30
+com. IN NS ns01.com.
+com. IN NS ns02.com.
+ns01.com. IN A 172.20.0.40
+ns02.com. IN A 172.20.0.41
+
+scapy. IN NS ns01.scapy.
+scapy. IN NS ns02.scapy.
+ns01.scapy. IN A 172.20.0.60
+ns02.scapy. IN A 172.20.0.61
+
+loop. IN NS ns01.loop.
+loop. IN NS ns02.loop.
+loop. IN NS ns03.loop.
+loop. IN NS ns04.loop.
+loop. IN NS ns05.loop.
+loop. IN NS ns06.loop.
+loop. IN NS ns07.loop.
+loop. IN NS ns08.loop.
+ns01.loop. IN A 172.20.0.64
+ns02.loop. IN A 172.20.0.65
+ns03.loop. IN A 172.20.0.66
+ns04.loop. IN A 172.20.0.67
+ns05.loop. IN A 172.20.0.68
+ns06.loop. IN A 172.20.0.69
+ns07.loop. IN A 172.20.0.70
+ns08.loop. IN A 172.20.0.71

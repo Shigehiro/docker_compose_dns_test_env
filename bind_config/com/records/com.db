@@ -1,0 +1,19 @@
+$ORIGIN com.
+$TTL 3600
+com. IN SOA ns01.com. ns01.com. (
+2010062303
+1h
+15m
+30d
+1h )
+  IN NS ns01.com.
+  IN NS ns02.com.
+
+ns01 IN A 172.20.0.40
+ns02 IN A 172.20.0.41
+
+example.com. IN NS ns01.example.com.
+example.com. IN NS ns02.example.com.
+ns01.example.com. IN A 172.20.0.50
+ns02.example.com. IN A 172.20.0.51
+

@@ -1,0 +1,2 @@
+docker container run --net cacheserve_env_cacheserve_test -e MAX_TEST_SECONDS=600 -e DNS_SERVER_ADDR=172.20.0.10 -e MAX_QPS=50 -v $(pwd)/query.txt:/opt/records.txt:ro guessi/dnsperf:alpine
+

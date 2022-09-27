@@ -25,15 +25,31 @@ services:
   bind-cache:
     container_name: bind-cache
     build:
-      context: ./Docker_build/bind_build_rocky9
+      context: ./Docker_build/bind_build_22.04
       dockerfile: Dockerfile
+    cap_add:
+      - NET_ADMIN
     tty: true
     volumes:
-      - ./bind_config/cache/config/named.conf.rocky9:/etc/named.conf:rw
-      - ./bind_config/cache/records/named.ca.rocky9:/var/named/named.ca:rw 
+      - ./bind_config/cache/config/named.conf:/etc/bind/named.conf:rw
+      - ./bind_config/cache/records/:/var/lib/bind:rw 
     networks:
       cacheserve_test:
         ipv4_address: 172.20.0.11
+  bind-cache-old:
+    container_name: bind-cache-old
+    build:
+      context: ./Docker_build/bind_build_22.04_old
+      dockerfile: Dockerfile
+    cap_add:
+      - NET_ADMIN
+    tty: true
+    volumes:
+      - ./bind_config/cache/config/named.conf:/etc/bind/named.conf:rw
+      - ./bind_config/cache/records/:/var/lib/bind:rw 
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.12
   unbound:
     container_name: unbound
     build:

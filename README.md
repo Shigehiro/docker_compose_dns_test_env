@@ -15,7 +15,7 @@ docker-compose --no-cache bind-cache-old
 docker-compose up -d
 ```
 
-# About DNS Domains configured with this compose file
+# About DNS Domains configured by this compose file
 
 - *.example.com domain
   - BIND auth servers return answers for this domain
@@ -43,7 +43,7 @@ dig to *.loop from a dig-client
 
 When starting containers with this compose file, all cache DNS containers are configured to refer to an internal root server as its hints.
 
-# Abount BIND Caching Name Server
+# About BIND Caching Name Server
 
 When BIND cache sesrvers send queries to faked auth servers(scapy), faked auth servers will retrun ICMP port unrechable packets and faked DNS responses.
 When BIND recieves an ICMP port unreachable packet before recieving a DNS response, BIND seems to regard its reply as servfail.

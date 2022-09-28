@@ -1,15 +1,17 @@
-FROM ubuntu:jammy
+FROM ubuntu:focal
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV LC_ALL C.UTF-8
 
-ARG DEB_VERSION=1:9.18.1-1ubuntu1
+ARG DEB_VERSION=1:9.16.1-0ubuntu2.11
+#ARG DEB_VERSION=1:9.16.1-0ubuntu2
 
 # Install BIND 9
 RUN apt-get -qqqy update
 RUN apt-get -qqqy dist-upgrade
 RUN apt-get -qqqy install bind9=$DEB_VERSION bind9-utils=$DEB_VERSION bind9-libs=$DEB_VERSION
-RUN apt-get -qqqy install bind9-dnsutils nftables
+RUN apt-get -qqqy install bind9-dnsutils=$DEB_VERSION
+RUN apt-get -qqqy install nftables
 
 RUN mkdir -p /etc/bind && chown root:bind /etc/bind/ && chmod 755 /etc/bind
 RUN mkdir -p /var/cache/bind && chown bind:bind /var/cache/bind && chmod 755 /var/cache/bind

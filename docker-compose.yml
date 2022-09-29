@@ -38,17 +38,19 @@ services:
     networks:
       cacheserve_test:
         ipv4_address: 172.20.0.11
-  unbound:
-    container_name: unbound
-    build:
-      context: ./Docker_build/unbound_build
-      dockerfile: Dockerfile
-    tty: true
-    volumes:
-      - ./unbound_config/:/opt/unbound/etc/unbound
-    networks:
-      cacheserve_test:
-        ipv4_address: 172.20.0.15
+  #unbound:
+  #  container_name: unbound
+  #  build:
+  #    context: ./Docker_build/unbound_build
+  #    dockerfile: Dockerfile
+  #  tty: true
+  #  cap_add:
+  #    - NET_ADMIN
+  #  volumes:
+  #    - ./unbound_config/:/opt/unbound/etc/unbound/:rw
+  #  networks:
+  #    cacheserve_test:
+  #      ipv4_address: 172.20.0.15
   bind-root:
     container_name: bind-root
     image: ubuntu/bind9:latest

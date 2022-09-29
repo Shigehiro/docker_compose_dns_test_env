@@ -7,8 +7,14 @@
 - [5. Dig output](#5-dig-output)
 - [6. About Caching Name Servers](#6-about-caching-name-servers)
 - [7. About BIND Caching Name Server](#7-about-bind-caching-name-server)
-- [8. Send www.foobar.loop to unbound from dig-client](#8-send-wwwfoobarloop-to-unbound-from-dig-client)
+- [8. Send `www.foobar.loop` to unbound from dig-client](#8-send-wwwfoobarloop-to-unbound-from-dig-client)
 - [9. About Docker host](#9-about-docker-host)
+
+# Note
+
+At the moment, I struggle to start unbound container.
+unbound container failed to start. I will check this later.
+As of now, I disabled starting unbound container.
 
 # 2. Description
 
@@ -163,7 +169,7 @@ table inet filter {
 }
 ```
 
-# 8. Send www.foobar.loop to unbound from dig-client
+# 8. Send `www.foobar.loop` to unbound from dig-client
 
 ```
 $ docker exec unbound unbound-control flush all

@@ -1,7 +1,3 @@
 *cacheserve.license*
 *cacheserve*.tar.gz
-./unbound_config/dev
-./unbound_config/dev/null
-./unbound_config/dev/random
-./unbound_config/dev/urandom
 

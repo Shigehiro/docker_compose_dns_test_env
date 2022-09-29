@@ -114,6 +114,8 @@ RUN set -x && \
       libevent-2.1-7 \
       libnghttp2-14 \
       libexpat1 \
+      bind9-dnsutils \
+      knot-dnsutils \
       libprotobuf-c1 && \
     groupadd _unbound && \
     useradd -g _unbound -s /dev/null -d /etc _unbound && \
@@ -141,15 +143,8 @@ LABEL org.opencontainers.image.version=${UNBOUND_VERSION} \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.source="https://github.com/MatthewVance/unbound-docker"
 
-WORKDIR /
-RUN apt-get update && apt-get install -y nftables && rm -f /etc/nftables.conf
-ADD ./nftables.conf /etc/nftables.conf
-
 EXPOSE 53/tcp
 EXPOSE 53/udp
-EXPOSE 8953/udp
-
-WORKDIR /opt/unbound/
 
 HEALTHCHECK --interval=30s --timeout=30s --start-period=10s --retries=3 CMD drill @127.0.0.1 cloudflare.com || exit 1
 

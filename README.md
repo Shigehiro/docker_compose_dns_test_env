@@ -14,7 +14,7 @@
 
 At the moment, I struggle to start unbound container.
 unbound container failed to start. I will check this later.
-As of now, I disabled starting unbound container.
+So I have disabled starting unbound container.
 
 # 2. Description
 
@@ -37,7 +37,7 @@ docker-compose up -d
 - *.scapy domain
   - scapy faked auth servers return queries for *.scpay domain, such as a.foo.capy, b.bar.scapy, c.foobar.scapy, whatever queries ended with *.scapy
 - *.loop domain
-  - scapy faked auth servers return inifnit loop delegations
+  - scapy faked auth servers return infinite loop delegations
   - whatever queries ended with *.loop
 
 # 5. Dig output

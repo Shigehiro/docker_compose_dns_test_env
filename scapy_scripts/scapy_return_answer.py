@@ -36,31 +36,31 @@ def dns_reply(packet):
         )
 
     # Construct the DNS response by looking at the sniffed packet and manually
-    #if '.scapy' in str(packet[DNS].qd.qname):
-    dns = DNS(
-        id=packet[DNS].id,
-        qd=packet[DNS].qd,
-        aa=1,
-        rd=0,
-        qr=1,
-        rcode=0,
-        qdcount=1,
-        ancount=1,
-        nscount=0,
-        arcount=1,
-        an=DNSRR(
-            rrname=packet[DNS].qd.qname,
-            type='A',
-            ttl=1800,
-            rdata='1.1.1.1'),
-        ar=DNSRROPT(rclass=1232, z=0, rdlen=0),
-        )
-        
-    # Put the full packet together
-    response_packet = eth / ip / udp / dns
+    if '.scapy' in str(packet[DNS].qd.qname):
+        dns = DNS(
+            id=packet[DNS].id,
+            qd=packet[DNS].qd,
+            aa=1,
+            rd=0,
+            qr=1,
+            rcode=0,
+            qdcount=1,
+            ancount=1,
+            nscount=0,
+            arcount=1,
+            an=DNSRR(
+                rrname=packet[DNS].qd.qname,
+                type='A',
+                ttl=1800,
+                rdata='1.1.1.1'),
+            ar=DNSRROPT(rclass=1232, z=0, rdlen=0),
+            )
+            
+        # Put the full packet together
+        response_packet = eth / ip / udp / dns
 
-    # Send the DNS response
-    sendp(response_packet, iface=net_interface)
+        # Send the DNS response
+        sendp(response_packet, iface=net_interface)
 
 # Sniff for a DNS query matching the 'packet_filter' and send a specially crafted reply
 sniff(filter='udp and dst port 53', iface='eth0', store=0, prn=dns_reply)

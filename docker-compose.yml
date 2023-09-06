@@ -24,20 +24,20 @@ services:
     networks:
       cacheserve_test:
         ipv4_address: 172.20.0.10
-  bind-cache:
-    container_name: bind-cache
-    build:
-      context: ./Docker_build/bind_build_20.04
-      dockerfile: Dockerfile
-    cap_add:
-      - NET_ADMIN
-    tty: true
-    volumes:
-      - ./bind_config/cache/config/named.conf:/etc/bind/named.conf:rw
-      - ./bind_config/cache/records/:/var/lib/bind:rw 
-    networks:
-      cacheserve_test:
-        ipv4_address: 172.20.0.11
+#  bind-cache:
+#    container_name: bind-cache
+#    build:
+#      context: ./Docker_build/bind_build_20.04
+#      dockerfile: Dockerfile
+#    cap_add:
+#      - NET_ADMIN
+#    tty: true
+#    volumes:
+#      - ./bind_config/cache/config/named.conf:/etc/bind/named.conf:rw
+#      - ./bind_config/cache/records/:/var/lib/bind:rw 
+#    networks:
+#      cacheserve_test:
+#        ipv4_address: 172.20.0.11
   #unbound:
   #  container_name: unbound
   #  build:
@@ -81,6 +81,8 @@ services:
   bind-example01:
     container_name: bind-example01
     image: ubuntu/bind9:latest
+    cap_add:
+      - NET_ADMIN
     volumes:
       - ./bind_config/example.com/config/named.conf:/etc/bind/named.conf:rw
       - ./bind_config/example.com/records/:/var/lib/bind:rw 
@@ -90,6 +92,8 @@ services:
   bind-example02:
     container_name: bind-example02
     image: ubuntu/bind9:latest
+    cap_add:
+      - NET_ADMIN
     volumes:
       - ./bind_config/example.com/config/named.conf:/etc/bind/named.conf:rw
       - ./bind_config/example.com/records/:/var/lib/bind:rw 

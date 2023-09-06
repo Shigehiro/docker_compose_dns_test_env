@@ -1,5 +1,5 @@
 FROM almalinux/8-init:latest
-ADD cacheserve-7.6.3.1-308152-rhel-8-x86_64.tar.gz /tmp/
+ADD cacheserve-7.7.0.2-378215-rhel-8-x86_64.tar.gz /tmp/
 COPY channel.conf /etc/
 WORKDIR /tmp
 RUN rpm -ivh cacheserve-*/*.rpm \
@@ -7,9 +7,9 @@ RUN rpm -ivh cacheserve-*/*.rpm \
 && dnf install -y bind-utils rsyslog less man bash-completion net-tools net-snmp net-snmp-utils iproute iputils python3 \
 && echo "MANDATORY_MANPATH  /usr/local/nom/man" | tee -a /etc/man_db.conf \
 dnf clean all && rm -rf /tmp/cacheserve* && systemctl enable snmpd.service && systemctl enable snmptrapd.service
-ADD nomcc /tmp/nomcc
-WORKDIR /tmp/nomcc
-RUN python3 setup.py install
+#ADD nomcc /tmp/nomcc
+#WORKDIR /tmp/nomcc
+#RUN python3 setup.py install
 COPY cacheserve.license /usr/local/nom/etc
 COPY rsyslog.conf /etc
 COPY snmpd.conf /etc/snmp

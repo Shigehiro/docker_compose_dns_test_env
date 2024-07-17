@@ -11,46 +11,33 @@ services:
     networks:
       cacheserve_test:
         ipv4_address: 172.20.0.3
-  cachesesrve:
-    container_name: cacheserve
+  bind-cache:
+    container_name: bind-cache
     build:
-      context: ./Docker_build/cacheserve_build
+      context: ./Docker_build/bind_build_20.04
       dockerfile: Dockerfile
+    cap_add:
+      - NET_ADMIN
     tty: true
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro 
-    tmpfs:
-      - /run
+      - ./bind_config/cache/config/named.conf:/etc/bind/named.conf:rw
+      - ./bind_config/cache/records/:/var/lib/bind:rw 
     networks:
       cacheserve_test:
-        ipv4_address: 172.20.0.10
-#  bind-cache:
-#    container_name: bind-cache
-#    build:
-#      context: ./Docker_build/bind_build_20.04
-#      dockerfile: Dockerfile
-#    cap_add:
-#      - NET_ADMIN
-#    tty: true
-#    volumes:
-#      - ./bind_config/cache/config/named.conf:/etc/bind/named.conf:rw
-#      - ./bind_config/cache/records/:/var/lib/bind:rw 
-#    networks:
-#      cacheserve_test:
-#        ipv4_address: 172.20.0.11
-  #unbound:
-  #  container_name: unbound
-  #  build:
-  #    context: ./Docker_build/unbound_build
-  #    dockerfile: Dockerfile
-  #  tty: true
-  #  cap_add:
-  #    - NET_ADMIN
-  #  volumes:
-  #    - ./unbound_config/:/opt/unbound/etc/unbound/:rw
-  #  networks:
-  #    cacheserve_test:
-  #      ipv4_address: 172.20.0.15
+        ipv4_address: 172.20.0.11
+  unbound:
+     container_name: unbound
+    build:
+      context: ./Docker_build/unbound_build
+      dockerfile: Dockerfile
+    tty: true
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - ./unbound_config/:/opt/unbound/etc/unbound/:rw
+    networks:
+      cacheserve_test:
+        ipv4_address: 172.20.0.15
   bind-root:
     container_name: bind-root
     image: ubuntu/bind9:latest

@@ -1,15 +1,16 @@
-FROM ubuntu:jammy
+FROM docker.io/ubuntu:24.04
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV LC_ALL C.UTF-8
 
-ARG DEB_VERSION=1:9.18.1-1ubuntu1.2
+#ARG DEB_VERSION=1:9.18.1-1ubuntu1.2
 
 # Install BIND 9
 RUN apt-get -qqqy update
 RUN apt-get -qqqy dist-upgrade
-RUN apt-get -qqqy install bind9=$DEB_VERSION bind9-utils=$DEB_VERSION bind9-libs=$DEB_VERSION
-RUN apt-get -qqqy install bind9-dnsutils=$DEB_VERSION
+#RUN apt-get -qqqy install bind9=$DEB_VERSION bind9-utils=$DEB_VERSION bind9-libs=$DEB_VERSION
+#RUN apt-get -qqqy install bind9-dnsutils=$DEB_VERSION
+RUN apt-get -qqqy install bind9 bind9-utils bind9-libs
 RUN apt-get -qqqy install nftables
 
 RUN mkdir -p /etc/bind && chown root:bind /etc/bind/ && chmod 755 /etc/bind

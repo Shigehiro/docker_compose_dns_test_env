@@ -1,6 +1,7 @@
 # 1. Docker Compose Set up DNS testing environment
 
 - [1. Docker Compose Set up DNS testing environment](#1-docker-compose-set-up-dns-testing-environment)
+- [Note](#note)
 - [2. Description](#2-description)
 - [3. How to run docker-compose](#3-how-to-run-docker-compose)
 - [4. About DNS Domains configured by this compose file](#4-about-dns-domains-configured-by-this-compose-file)
@@ -14,7 +15,9 @@
 
 At the moment, I struggle to start unbound container.
 unbound container failed to start. I will check this later.
-So I have disabled starting unbound container.
+So I have disabled starting unbound container.<br>
+
+**Confirmed this compose file worked on podman**
 
 # 2. Description
 
@@ -39,6 +42,8 @@ docker-compose up -d
 - *.loop domain
   - scapy faked auth servers return infinite loop delegations
   - whatever queries ended with *.loop
+- *.txid.com domain
+  - scapy returns DNS responses with wrong TXID, then wiht a correct TXID
 
 # 5. Dig output
 

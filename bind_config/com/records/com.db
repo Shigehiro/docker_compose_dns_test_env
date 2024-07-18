@@ -17,3 +17,7 @@ example.com. IN NS ns02.example.com.
 ns01.example.com. IN A 172.20.0.50
 ns02.example.com. IN A 172.20.0.51
 
+txid.com. IN NS ns01.txid.com.
+txid.com. IN NS ns02.txid.com.
+ns01.txid.com. IN A 172.20.0.80
+ns02.txid.com. IN A 172.20.0.81

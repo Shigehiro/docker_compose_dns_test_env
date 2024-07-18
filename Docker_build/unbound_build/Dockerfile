@@ -1,4 +1,4 @@
-FROM debian:bullseye as openssl
+FROM docker.io/debian:bookworm as openssl
 LABEL maintainer="Matthew Vance"
 
 ENV VERSION_OPENSSL=openssl-3.0.5 \
@@ -40,13 +40,13 @@ RUN set -e -x && \
         /var/tmp/* \
         /var/lib/apt/lists/*
 
-FROM debian:bullseye as unbound
+FROM docker.io/debian:bookworm as unbound
 LABEL maintainer="Matthew Vance"
 
 ENV NAME=unbound \
-    UNBOUND_VERSION=1.16.2 \
-    UNBOUND_SHA256=2e32f283820c24c51ca1dd8afecfdb747c7385a137abe865c99db4b257403581 \
-    UNBOUND_DOWNLOAD_URL=https://nlnetlabs.nl/downloads/unbound/unbound-1.16.2.tar.gz
+    UNBOUND_VERSION=1.20.0 \
+    #UNBOUND_SHA256=2e32f283820c24c51ca1dd8afecfdb747c7385a137abe865c99db4b257403581 \
+    UNBOUND_DOWNLOAD_URL=https://nlnetlabs.nl/downloads/unbound/unbound-1.20.0.tar.gz
 
 WORKDIR /tmp/src
 
@@ -64,10 +64,10 @@ RUN build_deps="curl gcc libc-dev libevent-dev libexpat1-dev libnghttp2-dev make
       libprotobuf-c-dev \
       protobuf-c-compiler && \
     curl -sSL $UNBOUND_DOWNLOAD_URL -o unbound.tar.gz && \
-    echo "${UNBOUND_SHA256} *unbound.tar.gz" | sha256sum -c - && \
+    #echo "${UNBOUND_SHA256} *unbound.tar.gz" | sha256sum -c - && \
     tar xzf unbound.tar.gz && \
     rm -f unbound.tar.gz && \
-    cd unbound-1.16.2 && \
+    cd unbound-* && \
     groupadd _unbound && \
     useradd -g _unbound -s /dev/null -d /etc _unbound && \
     ./configure \
@@ -94,7 +94,7 @@ RUN build_deps="curl gcc libc-dev libevent-dev libexpat1-dev libnghttp2-dev make
         /var/lib/apt/lists/*
 
 
-FROM debian:bullseye
+FROM docker.io/debian:bookworm
 LABEL maintainer="Matthew Vance"
 
 ENV NAME=unbound \

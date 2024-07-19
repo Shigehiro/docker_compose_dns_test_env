@@ -1,17 +1,17 @@
 # 1. Docker Compose Set up DNS testing environment
 
 - [1. Docker Compose Set up DNS testing environment](#1-docker-compose-set-up-dns-testing-environment)
-- [Note](#note)
-- [2. Description](#2-description)
-- [3. How to run docker-compose](#3-how-to-run-docker-compose)
-- [4. About DNS Domains configured by this compose file](#4-about-dns-domains-configured-by-this-compose-file)
-- [5. Dig output](#5-dig-output)
-- [6. About Caching Name Servers](#6-about-caching-name-servers)
-- [7. About BIND Caching Name Server](#7-about-bind-caching-name-server)
-- [8. Send `www.foobar.loop` to unbound from dig-client](#8-send-wwwfoobarloop-to-unbound-from-dig-client)
-- [9. About Docker host](#9-about-docker-host)
+- [2. Note](#2-note)
+- [3. Description](#3-description)
+- [4. How to run docker-compose](#4-how-to-run-docker-compose)
+- [5. About DNS Domains configured by this compose file](#5-about-dns-domains-configured-by-this-compose-file)
+- [6. Dig output](#6-dig-output)
+- [7. About Caching Name Servers](#7-about-caching-name-servers)
+- [8. About BIND Caching Name Server](#8-about-bind-caching-name-server)
+- [9. Send `www.foobar.loop` to unbound from dig-client](#9-send-wwwfoobarloop-to-unbound-from-dig-client)
+- [10. `*.txid.com`](#10-txidcom)
 
-# Note
+# 2. Note
 
 At the moment, I struggle to start unbound container.
 unbound container failed to start. I will check this later.
@@ -19,21 +19,21 @@ So I have disabled starting unbound container.<br>
 
 **Confirmed this compose file worked on podman**
 
-# 2. Description
+# 3. Description
 
 - set up caching name servers, such as BIND, unbound
 - set up authoritative name servers with BIND
   - one internal root server, two .com, two example.com
 - set up broken auth name servers with python scapy
 
-# 3. How to run docker-compose
+# 4. How to run docker-compose
 
 ```text
 docker-compose build
 docker-compose up -d
 ```
 
-# 4. About DNS Domains configured by this compose file
+# 5. About DNS Domains configured by this compose file
 
 - *.example.com domain
   - BIND auth servers return answers for this domain
@@ -45,7 +45,7 @@ docker-compose up -d
 - *.txid.com domain
   - scapy returns DNS responses with wrong TXID, then wiht a correct TXID
 
-# 5. Dig output
+# 6. Dig output
 
 dig to *.example.com from a dig-client
 ```text
@@ -141,11 +141,11 @@ ns01.lvkxglhzrv.loop.   1800    IN      A       172.20.0.70
 ns01.jdhfmnttob.loop.   1800    IN      A       172.20.0.71
 ```
 
-# 6. About Caching Name Servers
+# 7. About Caching Name Servers
 
 When starting containers with this compose file, all cache DNS containers are configured to refer to an internal root server as its hints.
 
-# 7. About BIND Caching Name Server
+# 8. About BIND Caching Name Server
 
 When caching name sesrvers send queries to faked auth servers(scapy), faked auth servers will retrun ICMP port unrechable packets and faked DNS responses.
 When BIND recieves an ICMP port unreachable packet before recieving a DNS response, BIND seems to regard its reply as servfail.
@@ -174,7 +174,7 @@ table inet filter {
 }
 ```
 
-# 8. Send `www.foobar.loop` to unbound from dig-client
+# 9. Send `www.foobar.loop` to unbound from dig-client
 
 ```
 $ docker exec unbound unbound-control flush all
@@ -229,81 +229,32 @@ $ docker logs unbound | grep 'exceeded' -A1
 [1664371154] unbound[1:0] debug: return error response SERVFAIL
 ```
 
-# 9. About Docker host
+# 10. `*.txid.com`
 
-This compose file will launch an init container, so please make sure you are using cgroup v1 instead of v2.
-If you want to know more about this, please see.
-
-- https://serverfault.com/questions/1053187/systemd-fails-to-run-in-a-docker-container-when-using-cgroupv2-cgroupns-priva
-- https://github.com/systemd/systemd/issues/13477#issuecomment-528113009
-
-```text
-$ cat /proc/cmdline 
-BOOT_IMAGE=/boot/vmlinuz-5.15.0-48-generic root=UUID=4db44fd6-e7c2-4c96-be7f-450a80786f12 ro quiet splash systemd.unified_cgroup_hierarchy=0 vt.handoff=7
-
-$ docker info |grep -i cgroup
- Cgroup Driver: cgroupfs
- Cgroup Version: 1
+The scapy containers of this domian retrun DNS responses with wrong TXIDs, then with a correct TXID as below.
 ```
+# podman exec dig-client dig @172.20.0.80 a.txid.com
+;; Warning: ID mismatch: expected ID 58931, got 51726
+;; Warning: ID mismatch: expected ID 58931, got 48094
+;; Warning: ID mismatch: expected ID 58931, got 46749
+;; Warning: ID mismatch: expected ID 58931, got 36840
+;; Warning: ID mismatch: expected ID 58931, got 7467
 
-```text
-$ cat /etc/lsb-release |tail -1
-DISTRIB_DESCRIPTION="Ubuntu 22.04.1 LTS"
+; <<>> DiG 9.18.24-0ubuntu5-Ubuntu <<>> @172.20.0.80 a.txid.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 58931
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
 
-$ docker info
-Client:
- Context:    default
- Debug Mode: false
- Plugins:
-  app: Docker App (Docker Inc., v0.9.1-beta3)
-  buildx: Docker Buildx (Docker Inc., v0.9.1-docker)
-  compose: Docker Compose (Docker Inc., v2.10.2)
-  scan: Docker Scan (Docker Inc., v0.17.0)
+;; QUESTION SECTION:
+;a.txid.com.                    IN      A
 
-Server:
- Containers: 5
-  Running: 2
-  Paused: 0
-  Stopped: 3
- Images: 476
- Server Version: 20.10.18
- Storage Driver: overlay2
-  Backing Filesystem: extfs
-  Supports d_type: true
-  Native Overlay Diff: true
-  userxattr: false
- Logging Driver: json-file
- Cgroup Driver: cgroupfs
- Cgroup Version: 1
- Plugins:
-  Volume: local
-  Network: bridge host ipvlan macvlan null overlay
-  Log: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog
- Swarm: inactive
- Runtimes: io.containerd.runtime.v1.linux runc io.containerd.runc.v2
- Default Runtime: runc
- Init Binary: docker-init
- containerd version: 9cd3357b7fd7218e4aec3eae239db1f68a5a6ec6
- runc version: v1.1.4-0-g5fd4c4d
- init version: de40ad0
- Security Options:
-  apparmor
-  seccomp
-   Profile: default
- Kernel Version: 5.15.0-48-generic
- Operating System: Ubuntu 22.04.1 LTS
- OSType: linux
- Architecture: x86_64
- CPUs: 12
- Total Memory: 62.71GiB
- Name: desktop
- ID: 2TPD:7WEL:XE55:DEWM:IO6N:RYMN:M7HK:3ETF:YXAV:2M24:VP7W:UYUQ
- Docker Root Dir: /var/lib/docker
- Debug Mode: false
- Registry: https://index.docker.io/v1/
- Labels:
- Experimental: false
- Insecure Registries:
-  127.0.0.0/8
- Live Restore Enabled: false
+;; ANSWER SECTION:
+a.txid.com.             3600    IN      A       1.1.1.1
+
+;; Query time: 171 msec
+;; SERVER: 172.20.0.80#53(172.20.0.80) (UDP)
+;; WHEN: Fri Jul 19 05:12:55 UTC 2024
+;; MSG SIZE  rcvd: 54
 ```

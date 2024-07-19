@@ -13,7 +13,7 @@ net_interface = "eth0"
 # Function that replies to DNS query
 def dns_reply(packet):
 
-    correct_txid =packet[DNS].id
+    correct_txid = packet[DNS].id
     txid_list = list()
     for i in range(5):
         txid_list.append(random.randint(0,65536))
